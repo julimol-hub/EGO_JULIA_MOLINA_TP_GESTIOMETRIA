@@ -21,21 +21,54 @@ library(flexdashboard)
 
 ```
 
-![Avance de estado de calle de entrada](edc76eaf-d43d-417f-8463-6e2222081150.jpg){width="60%"}
-
-Foto del estado de calle de entrada
+![Avance de estado de calle de entrada](edc76eaf-d43d-417f-8463-6e2222081150.jpg){width="85%"}
 
 ## Column {data-width="850"}
 
-### Chart B
+### Imagenes de ultimos avances
 
 ```{r}
 
 ```
 
-### Chart C
+![Avance de calles adoquinadas](5f2cb78f-b4ae-4816-bae8-0e2683ce4359.jpg){width="45%"} ![Avance de calles adoquinadas](7671430d-5a98-4cce-90e0-d73b424c6abe.jpg){width="48%"}
+
+### Graficos de cotos de obra
 
 ```{r}
+
+# Instala la librería plotly si no la tienes
+# install.packages("plotly")
+
+library(plotly)
+library(dplyr) # Útil para manejar data frames
+
+# 1. Crear el data frame con los costos
+datos_costos <- data.frame(
+  Variable = c("Materiales", "Mano de Obra", "Combustibles", "Maquinarias", "Mantenimiento"),
+  Costo = c(580, 380, 30, 50, 150)
+)
+
+#datos_costos = data.frame(Prueba)
+
+
+
+# 2. Calcular el porcentaje para las etiquetas (opcional, pero útil)
+datos_costos <- datos_costos %>%
+  mutate(Porcentaje = round(Costo / sum(Costo) * 100, 1))
+
+# 3. Crear el gráfico de pastel interactivo con plotly
+plot_ly(datos_costos,
+        labels = ~Variable,
+        values = ~Costo,
+        type = 'pie',
+        # Configurar el texto que aparece sobre la sección
+        textinfo = 'label+percent',
+        # Configurar el texto que aparece al pasar el ratón (tooltip)
+        hovertemplate = "Variable: %{label}<br>Costo: $%{value}<br>Porcentaje: %{percent}<extra></extra>"
+        ) %>%
+  layout(title = 'Distribución de Costos Semanales de Obra')
+
 
 ```
 
@@ -44,21 +77,57 @@ Foto del estado de calle de entrada
 ### ENERO 2025
 
 -   Subcontratos
--   Mano de obra
--   Materiales Aridos
--   Materiales Cementos
--   Materiales Hierros
--   Materiales Encofrados
+-   Mano de obra Albañileria - Gonzalez
+-   Mano de obra Metalurgica - Ortubia
+-   Mano de obra Sanitaria - Moreno
+-   Mano de obra Electrica - Rodriguez
 
 | Nombre del Contratista | Tarea | Fecha de inicio | Fecha de fin | Valor final |
 |---------------|---------------|---------------|---------------|---------------|
-| Ortubia | Movimientos de suelos | 08/01/2025 | 13/01/2025 |  |
-| Gonzalez | Hormigones en plateas | 24/01/2025 |  |  |
-| Gonzalez | Armado de estructuras de hierro | 12/01/2025 |  |  |
+| Ortubia | Movimientos de suelos | 08/01/2025 | 13/01/2025 |$450 |
+| Gonzalez | Hormigones en plateas | 24/01/2025 | 31/01/2025 |$600 |
+| Sanitaria | Armado base de cloaca | 12/01/2025 | 17/01/2025 |$250 |
+
+```{r}
+
+# Instala la librería plotly si no la tienes
+# install.packages("plotly")
+
+library(plotly)
+library(dplyr) # Útil para manejar data frames
+
+# 1. Crear el data frame con los costos de manos de obra
+datos_costos <- data.frame(
+  Variable = c("Gonzalez", "Ortubia", "Subcontrato", "Sanitarista", "Electricista"),
+  Costo = c(600, 450, 300, 250, 350)
+)
+
+#datos_costos = data.frame(Prueba)
+
+
+
+# 2. Calcular el porcentaje para las etiquetas (opcional, pero útil)
+datos_costos <- datos_costos %>%
+  mutate(Porcentaje = round(Costo / sum(Costo) * 100, 1))
+
+# 3. Crear el gráfico de pastel interactivo con plotly
+plot_ly(datos_costos,
+        labels = ~Variable,
+        values = ~Costo,
+        type = 'pie',
+        # Configurar el texto que aparece sobre la sección
+        textinfo = 'label+percent',
+        # Configurar el texto que aparece al pasar el ratón (tooltip)
+        hovertemplate = "Variable: %{label}<br>Costo: $%{value}<br>Porcentaje: %{percent}<extra></extra>"
+        ) %>%
+  layout(title = 'Distribución de Costos Semanales de Obra')
+
+
+```
 
 # Grado de avance
 
-```{r}
+```{r, fig.width=5, fig.height=4}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -96,7 +165,7 @@ datos_long <- datos_avance %>%
 # 2. Generar el Gráfico con ggplot2
 ggplot(datos_long, aes(x = Mes, y = Porcentaje, fill = Tipo_Avance)) +
   # Crear las barras
-  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.6), width = 0.5) +
   # Añadir etiquetas de texto sobre las barras
   geom_text(
     aes(label = paste0(round(Porcentaje, 1), "%")),
@@ -121,10 +190,10 @@ ggplot(datos_long, aes(x = Mes, y = Porcentaje, fill = Tipo_Avance)) +
   # Cambiar los colores (opcional)
   scale_fill_manual(values = c("Teorico" = "skyblue", "Real" = "darkgreen")) +
   # Rotar texto del eje X si es necesario, pero aquí no lo es
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 25, hjust = 1))
 ```
 
-### PAGINA 1
+### CONTROL DE MANOS DE OBRA
 
 -   Subcontratos
 -   Mano de obra
